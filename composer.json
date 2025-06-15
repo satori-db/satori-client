@@ -1,0 +1,15 @@
+{
+    "name": "satori-db/satori-client",
+    "description": "PHP client for Satori database",
+    "type": "library",
+    "require": {
+      "php": ">=7.4",
+      "textalk/websocket": "^1.5"
+    },
+    "autoload": {
+      "psr-4": {
+        "Satori\\": "src/"
+      }
+    }
+  }
+  
