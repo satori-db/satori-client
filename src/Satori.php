@@ -58,6 +58,22 @@ class Satori
         return $this->send(['command' => 'SET'] + $payload);
     }
 
+    public function train(): mixed {
+        return $this->send([
+            'command' => 'TRAIN',
+            'type' => 'train'
+        ]);
+    }
+    
+    public function ask(array $payload): mixed {
+        return $this->send(array_merge(['command' => 'ASK'], $payload));
+    }
+    
+    public function ann(array $payload): mixed {
+        return $this->send(array_merge(['command' => 'ANN'], $payload));
+    }
+
+
     public function get(array $payload): mixed
     {
         return $this->send(['command' => 'GET'] + $payload);
@@ -166,3 +182,163 @@ class Satori
         ]);
     }
 }
+
+namespace Satori;
+
+class Schema
+{
+    private Satori $satori;
+    private string $schemaName;
+    private mixed $body;
+    private mixed $key;
+
+    public function __construct(Satori $satori, string $schemaName, mixed $body = null, mixed $key = null)
+    {
+        $this->satori = $satori;
+        $this->schemaName = $schemaName;
+        $this->body = $body;
+        $this->key = $key;
+    }
+
+    public function setBody(mixed $body): self
+    {
+        $this->body = $body;
+        return $this;
+    }
+
+    public function setKey(mixed $key): self
+    {
+        $this->key = $key;
+        return $this;
+    }
+
+    public function set(): mixed
+    {
+        return $this->satori->set([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function delete(): mixed
+    {
+        return $this->satori->delete([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function encrypt(): mixed
+    {
+        return $this->satori->encrypt([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function decrypt(): mixed
+    {
+        return $this->satori->decrypt([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function setVertex(): mixed
+    {
+        return $this->satori->setVertex([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function getVertex(): mixed
+    {
+        return $this->satori->getVertex([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function deleteVertex(): mixed
+    {
+        return $this->satori->deleteVertex([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function dfs(): mixed
+    {
+        return $this->satori->dfs([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function setRef(): mixed
+    {
+        return $this->satori->setRef([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function getRefs(): mixed
+    {
+        return $this->satori->getRefs([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function deleteRefs(): mixed
+    {
+        return $this->satori->deleteRefs([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function push(): mixed
+    {
+        return $this->satori->push([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function pop(): mixed
+    {
+        return $this->satori->pop([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+        ]);
+    }
+
+    public function splice(): mixed
+    {
+        return $this->satori->splice([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+
+    public function remove(): mixed
+    {
+        return $this->satori->remove([
+            "schema" => $this->schemaName,
+            "key" => $this->key,
+            "data" => $this->body,
+        ]);
+    }
+}
+

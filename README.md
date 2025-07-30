@@ -224,6 +224,67 @@ $client->deleteRef(['key' => 'user:123', 'ref' => 'profile:123']);
 
 ---
 
+## 🤖 AI Methods
+Satori has AI features integrated that boost developers productivity. By example you can train an embedding model with your data and use it wherever you want to. 
+You can train your embedding model manually whenever you want to but Satori will automatically fine-tune your model with any new updates and use this updated model for all emebedding operations.
+
+### 🔹 train
+Train an embedding model with your data. The model will be at the root of your db in the `satori_semantic_model` folder
+```php
+$client->train();
+```
+
+### 🔹 ann
+Perform an Aproximate Nearest Neighbors search
+```php
+$client->ann(['key' => 'user:123', 'top_k' => '5']);
+```
+- **key**: Source object key.
+- **top_k**: Number of nearest neighbors to return
+
+### 🔹 query
+Make querys in natural language
+```php
+$client->query(['query' => 'Insert the value 5 into the grades array of user:123', 'backend' => 'openai:gpt-4o-mini']);
+```
+- **query**: Your query in natural language.
+- **ref**: The LLM backend. Must be `openai:model-name` or `ollama:model-name`, if not specified `openai:gpt-4o-mini` will be used as default. If you're using OpenAI as your backend you must specify the `OPENAI_API_KEY` env variable.
+
+### 🔹 ask
+Ask question about your data in natural language
+```php
+$client->query(['question' => 'How many user over 25 years old do we have. Just return the number.', 'backend' => 'openai:gpt-4o-mini']);
+```
+- **question**: Your question in natural language.
+- **ref**: The LLM backend. Must be `openai:model-name` or `ollama:model-name`, if not specified `openai:gpt-4o-mini` will be used as default. If you're using OpenAI as your backend you must specify the `OPENAI_API_KEY` env variable.
+
+
+
+# 🐘 Schema Class (Data Model)
+
+You can use the `Schema` class to model your data in an object-oriented way:
+
+```php
+use Satori\Satori;
+use Satori\Schema;
+
+$satori = new Satori("username", "password", "ws://localhost:1234");
+$satori->connect();
+
+$user = new Schema($satori, "user", ["name" => "Anna"], "my_key");
+$user->set();
+```
+
+
+It includes useful methods such as:
+
+- `set`, `delete`, `encrypt`, `decrypt`, `set_vertex`, `get_vertex`, `delete_vertex`, `dfs`
+
+- Reference methods: `set_ref`, `get_refs`, `delete_refs`
+
+- Array methods: `push`, `pop`, `splice`, `remove`
+
+
 ## 📝 Complete Example
 
 ```php
