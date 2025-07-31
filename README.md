@@ -317,6 +317,33 @@ $client->notify('user:1', function($data) {
 
 ---
 
+## Responses
+All responses obbey the following pattern:
+
+```ts
+{
+  data: any //the requested data if any
+  message: string //status message
+  status: string //SUCCESS || ERROR
+}
+```
+
+AI responses obbey a different patern:
+## ask
+```ts
+{
+  response: string //response to the question
+}
+```
+
+## query
+```ts
+{
+  result: string //response from the operation made in the db
+  status: string //status
+}
+```
+
 ## 💬 Questions or Suggestions?
 
 Feel free to open an issue or contribute!
