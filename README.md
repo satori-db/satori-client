@@ -324,7 +324,7 @@ All responses obbey the following pattern:
 {
   data: any //the requested data if any
   message: string //status message
-  status: string //SUCCESS || ERROR
+  type: string //SUCCESS || ERROR
 }
 ```
 
@@ -344,6 +344,12 @@ AI responses obbey a different patern:
 }
 ```
 
+## ann
+```ts
+{
+  results: array //response from the operation made in the db
+}
+```
 ## 💬 Questions or Suggestions?
 
 Feel free to open an issue or contribute!
