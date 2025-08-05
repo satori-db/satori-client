@@ -37,6 +37,13 @@ $client->connect();
 
 ---
 
+## Running
+You can run or update Satori right from the SDK
+```php
+client.update();
+client.run(0); //<port> if port is set to 0 the default port 2310 will be used
+```
+
 ## 🗃️ CRUD Operations
 
 ### Create Data

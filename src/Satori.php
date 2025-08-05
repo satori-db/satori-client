@@ -25,6 +25,21 @@ class Satori
         $this->ws = new Client($this->host);
     }
 
+    public function run(int $port): void{
+        $command = "satori -h";
+        if($this->username != "" && $this->password != ""){
+           $command =  $command . " -a " . $this->username . " " . $this->password;
+        }
+        if($port != 0){
+            $command = $command . " -p " . strval($port);
+        }
+        shell_exec(command);
+    }
+
+    public function update(): void{
+        shell_exec("satoridb update");
+    }
+
     private function send(array $payload): mixed
     {
         $id = uniqid('', true);
