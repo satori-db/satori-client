@@ -31,7 +31,7 @@ Copy the `Satori.php` file to your project and make sure Composer's autoload is 
 ```php
 use Satori\Satori;
 
-$client = new Satori('username', 'password', 'ws://localhost:8000');
+$client = new Satori('ws://localhost:8000', 'username', 'password');
 $client->connect();
 ```
 
