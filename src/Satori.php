@@ -33,7 +33,7 @@ class Satori
         if($port != 0){
             $command = $command . " -p " . strval($port);
         }
-        shell_exec(command);
+        shell_exec($command);
     }
 
     public function update(): void{
