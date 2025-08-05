@@ -29,6 +29,8 @@ Copy the `Satori.php` file to your project and make sure Composer's autoload is 
 ## 🏁 Basic Usage
 
 ```php
+require_once 'vendor/autoload.php';
+require_once 'Satori.php';
 use Satori\Satori;
 
 $client = new Satori('ws://localhost:8000', 'username', 'password');
