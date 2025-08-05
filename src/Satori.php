@@ -139,25 +139,6 @@ class Satori
         return $this->send(['command' => 'DECRYPT'] + $payload);
     }
 
-    public function setRef(array $payload): mixed
-    {
-        return $this->send(['command' => 'SET_REF'] + $payload);
-    }
-
-    public function getRefs(array $payload): mixed
-    {
-        return $this->send(['command' => 'GET_REFS'] + $payload);
-    }
-
-    public function deleteRefs(array $payload): mixed
-    {
-        return $this->send(['command' => 'DELETE_REFS'] + $payload);
-    }
-
-    public function deleteRef(array $payload): mixed
-    {
-        return $this->send(['command' => 'DELETE_REF'] + $payload);
-    }
 
     public function push(array $payload): mixed
     {
@@ -184,15 +165,6 @@ class Satori
         $this->subscriptions[$key] = $callback;
         $this->send([
             "command" => "NOTIFY",
-            "key" => $key,
-        ]);
-    }
-
-    public function unnotify(string $key): void
-    {
-        unset($this->subscriptions[$key]);
-        $this->send([
-            "command" => "UNNOTIFY",
             "key" => $key,
         ]);
     }
