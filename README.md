@@ -161,9 +161,9 @@ $client->decrypt(['key' => 'user:123', 'encryption_key' => 'secret']);
 
 ---
 
-## 📦 Array and Reference Manipulation Methods
+## 📦 Array Manipulation Methods
 
-Below are the available methods to manipulate arrays and references in the Satori database using the PHP client:
+Below are the available methods to manipulate arrays in the Satori database using the PHP client:
 
 ### 🔹 push
 Adds a value to an existing array in an object.
@@ -199,28 +199,6 @@ $client->remove(['key' => 'user:123', 'array' => 'friends', 'value' => 'user:456
 - **array**: Name of the array.
 - **value**: Value to remove.
 
-### 🔹 setRef
-Sets a reference to another object.
-```php
-$client->setRef(['key' => 'user:123', 'ref' => 'profile:123']);
-```
-- **key**: Source object key.
-- **ref**: Reference object key.
-
-### 🔹 getRefs
-Retrieves all references for an object.
-```php
-$refs = $client->getRefs(['key' => 'user:123']);
-```
-- **key**: Object key.
-
-### 🔹 deleteRef
-Deletes a specific reference from an object.
-```php
-$client->deleteRef(['key' => 'user:123', 'ref' => 'profile:123']);
-```
-- **key**: Source object key.
-- **ref**: Reference object key to delete.
 
 ---
 
