@@ -102,12 +102,6 @@ $client->notify('user:123', function($data) {
 });
 ```
 
-To stop receiving notifications:
-
-```php
-$client->unnotify('user:123');
-```
-
 ---
 
 ## 🕸️ Relations and Graphs
