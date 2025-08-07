@@ -22,7 +22,9 @@ class Satori
 
     public function connect(): void
     {
-        $this->ws = new Client($this->host);
+        $this->ws = new Client($this->host, [
+            'timeout' => 0
+        ]);
     }
 
 
