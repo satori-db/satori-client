@@ -68,6 +68,24 @@ class Satori
             'type' => 'train'
         ]);
     }
+
+    
+    public function memory_stats(): mixed
+    {
+        return $this->send(['command' => 'MEMORY_STATS']);
+    }
+
+    
+    public function cpu_stats(): mixed
+    {
+        return $this->send(['command' => 'CPU_STATS']);
+    }
+
+    
+    public function get_operations(): mixed
+    {
+        return $this->send(['command' => 'GET_OPERATIONS']);
+    }
     
     public function ask(array $payload): mixed {
         return $this->send(array_merge(['command' => 'ASK'], $payload));
