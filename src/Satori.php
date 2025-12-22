@@ -62,24 +62,8 @@ class Satori
         return $this->send(['command' => 'SET'] + $payload);
     }
 
-    public function train(): mixed {
-        return $this->send([
-            'command' => 'TRAIN',
-            'type' => 'train'
-        ]);
-    }
 
-    
-    public function memory_stats(): mixed
-    {
-        return $this->send(['command' => 'MEMORY_STATS']);
-    }
 
-    
-    public function cpu_stats(): mixed
-    {
-        return $this->send(['command' => 'CPU_STATS']);
-    }
 
     
     public function get_operations(): mixed
@@ -87,6 +71,12 @@ class Satori
         return $this->send(['command' => 'GET_OPERATIONS']);
     }
     
+
+    public function get_access_frequency(array $payload): mixed
+    {
+        return $this->send(['command' => 'GET_ACCESS_FREQUENCY'], $payload);
+    }
+
     public function ask(array $payload): mixed {
         return $this->send(array_merge(['command' => 'ASK'], $payload));
     }
@@ -95,6 +85,7 @@ class Satori
         return $this->send(array_merge(['command' => 'ANN'], $payload));
     }
 
+    
 
     public function get(array $payload): mixed
     {
@@ -115,6 +106,12 @@ class Satori
     {
         return $this->send(['command' => 'SET_VERTEX'] + $payload);
     }
+
+    public function setMiddlewate(array $payload): mixed
+    {
+        return $this->send(['command' => 'SET_MIDDLEWARE'] + $payload);
+    }
+
 
     public function getVertex(array $payload): mixed
     {
