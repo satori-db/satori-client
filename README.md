@@ -1,104 +1,847 @@
 # 📚 Satori PHP SDK
 
-This library allows you to easily and efficiently interact with the Satori database via WebSockets, supporting CRUD operations, real-time notifications, advanced queries, and graph-like relations.
+A PHP client library for interacting with the Satori database via WebSockets. This SDK provides comprehensive support for CRUD operations, graph operations, AI-powered features, encryption, and mindspace operations.
 
 ---
 
-## ✨ Main Features
+## 📋 Table of Contents
 
-- **Ultra-fast CRUD operations** ⚡
-- **Advanced queries** using `field_array` 🔍
-- **Real-time notifications** 📢
-- **Graph-like relations** (vertices and references) 🕸️
-- **Data encryption and decryption** 🔐
+- [✨ Features](#-features)
+- [🚀 Installation](#-installation)
+- [🏁 Quick Start](#-quick-start)
+- [🔧 Configuration](#-configuration)
+- [📦 Basic Operations](#-basic-operations)
+  - [SET - Create Data](#set---create-data)
+  - [GET - Read Data](#get---read-data)
+  - [PUT - Update Data](#put---update-data)
+  - [DELETE - Delete Data](#delete---delete-data)
+- [🔢 Array Operations](#-array-operations)
+  - [PUSH - Add to Array](#push---add-to-array)
+  - [POP - Remove Last Element](#pop---remove-last-element)
+  - [SPLICE - Remove First Element](#splice---remove-first-element)
+  - [REMOVE - Remove Specific Value](#remove---remove-specific-value)
+- [🔐 Encryption Operations](#-encryption-operations)
+  - [ENCRYPT - Encrypt Data](#encrypt---encrypt-data)
+  - [DECRYPT - Decrypt Data](#decrypt---decrypt-data)
+- [🕸️ Graph Operations](#-graph-operations)
+  - [SET_VERTEX - Add Relationship](#set_vertex---add-relationship)
+  - [GET_VERTEX - Get Relationships](#get_vertex---get-relationships)
+  - [DELETE_VERTEX - Remove Relationship](#delete_vertex---remove-relationship)
+  - [DFS - Depth-First Search](#dfs---depth-first-search)
+  - [GRAPH_BFS - Breadth-First Search](#graph_bfs---breadth-first-search)
+  - [GRAPH_DFS - Graph DFS](#graph_dfs---graph-dfs)
+  - [GRAPH_SHORTEST_PATH - Shortest Path](#graph_shortest_path---shortest-path)
+  - [GRAPH_CONNECTED_COMPONENTS - Connected Components](#graph_connected_components---connected-components)
+  - [GRAPH_SCC - Strongly Connected Components](#graph_scc---strongly-connected-components)
+  - [GRAPH_DEGREE_CENTRALITY - Degree Centrality](#graph_degree_centrality---degree-centrality)
+  - [GRAPH_CLOSENESS_CENTRALITY - Closeness Centrality](#graph_closeness_centrality---closeness-centrality)
+  - [GRAPH_CENTROID - Find Centroid](#graph_centroid---find-centroid)
+- [🤖 AI Operations](#-ai-operations)
+  - [ASK - Ask Questions](#ask---ask-questions)
+  - [ANN / GET_SIMILAR - Similarity Search](#ann--get_similar---similarity-search)
+- [📊 Analytics Operations](#-analytics-operations)
+  - [GET_OPERATIONS - Operation History](#get_operations---operation-history)
+  - [GET_ACCESS_FREQUENCY - Access Count](#get_access_frequency---access-count)
+- [🧠 Mindspace Operations](#-mindspace-operations)
+  - [SET_MINDSPACE - Create Mindspace](#set_mindspace---create-mindspace)
+  - [DELETE_MINDSPACE - Delete Mindspace](#delete_mindspace---delete-mindspace)
+  - [CHAT_MINDSPACE - Chat with Mindspace](#chat_mindspace---chat-with-mindspace)
+  - [LECTURE_MINDSPACE - Import Corpus](#lecture_mindspace---import-corpus)
+- [🔔 Real-time Notifications](#-real-time-notifications)
+- [🐘 Schema Class](#-schema-class)
+- [📝 Response Format](#-response-format)
+- [💡 Complete Example](#-complete-example)
+
+---
+
+## ✨ Features
+
+- **CRUD Operations** - Create, read, update, and delete objects
+- **Advanced Queries** - Field-based filtering with `field_array`
+- **Graph Operations** - Full graph traversal and analysis
+- **AI-Powered Features** - Natural language queries and semantic search
+- **Encryption** - AES encryption for sensitive data
+- **Mindspaces** - AI-powered conversational contexts
+- **Real-time Notifications** - Subscribe to object changes
 
 ---
 
 ## 🚀 Installation
 
-Install the required dependencies (for example, using Composer):
+Install the required dependencies using Composer:
 
 ```bash
 composer require textalk/websocket
 ```
 
-Copy the `Satori.php` file to your project and make sure Composer's autoload is configured.
-
----
-
-## 🏁 Basic Usage
+Include the autoloader and Satori class in your PHP project:
 
 ```php
 require_once 'vendor/autoload.php';
-require_once 'Satori.php';
+require_once 'src/Satori.php';
 use Satori\Satori;
-
-$client = new Satori('ws://localhost:8000', 'username', 'password');
-$client->connect();
 ```
-
-If you are inserting a vector you must specify data to a [f32] and type to vector
-
 
 ---
 
+## 🏁 Quick Start
 
-## 🗃️ CRUD Operations
+```php
+require_once 'vendor/autoload.php';
+require_once 'src/Satori.php';
+use Satori\Satori;
 
-### Create Data
+// Connect to Satori server
+$client = new Satori('ws://localhost:8000', 'username', 'password');
+$client->connect();
+
+// Create an object
+$client->set([
+    'key' => 'user:john',
+    'data' => [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'age' => 30
+    ],
+    'type' => 'user'
+]);
+
+// Retrieve the object
+$user = $client->get(['key' => 'user:john']);
+```
+
+---
+
+## 🔧 Configuration
+
+### Constructor Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `host` | string | Yes | WebSocket connection URL (e.g., `ws://localhost:8000`) |
+| `username` | string | No | Authentication username |
+| `password` | string | No | Authentication password |
+
+---
+
+## 📦 Basic Operations
+
+### SET - Create Data
+
+Creates a new object in the database. If no key is provided, a UUID is automatically generated.
 
 ```php
 $client->set([
-    'key' => 'user:123',
-    'data' => ['name' => 'John', 'email' => 'john@example.com'],
-    'type' => 'user'
+    'key' => 'user:john',
+    'data' => [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'age' => 30
+    ],
+    'type' => 'user',
+    'expires' => false,
+    'expiration_time' => null
 ]);
 ```
 
-### Read Data
+**Parameters:**
 
-```php
-$user = $client->get(['key' => 'user:123']);
-```
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | No | Object key (auto-generated if omitted) |
+| `data` | array | No | Object data content (default: `{}`) |
+| `type` | string | No | Object class/type (default: `"normal"`) |
+| `expires` | boolean | No | Whether object expires (default: `false`) |
+| `expiration_time` | integer | No | Expiration timestamp in milliseconds |
 
-### Modify a Field
-
-```php
-$client->put([
-    'key' => 'user:123',
-    'replace_field' => 'name',
-    'replace_value' => 'Peter'
-]);
-```
-
-### Delete Data
-
-```php
-$client->delete(['key' => 'user:123']);
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "key": "user:john"
+}
 ```
 
 ---
 
-## 🧩 Advanced Queries with `field_array` 🔍
+### GET - Read Data
 
-You can perform operations on multiple objects that meet certain conditions using the `field_array` field:
+Retrieves one or more objects from the database. Use `"*"` for key to return all objects.
 
 ```php
+// Get single object
+$user = $client->get(['key' => 'user:john']);
+
+// Get all objects
+$allObjects = $client->get(['key' => '*']);
+
+// Query with filters
 $results = $client->get([
     'field_array' => [
-        ['field' => 'email', 'value' => 'john@example.com']
+        ['field' => 'age', 'value' => 30]
+    ],
+    'one' => true,
+    'max' => 10
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | No* | Object key to retrieve. Use `"*"` for all objects |
+| `field_array` | array | No* | Query conditions for field-based search |
+| `one` | boolean | No | Return only first match (default: `false`) |
+| `max` | integer | No | Maximum results to return |
+| `encryption_key` | string | No | Key to decrypt encrypted objects |
+
+*Either `key` or `field_array` must be provided, but not both.
+
+---
+
+### PUT - Update Data
+
+Updates one or more fields of an existing object.
+
+```php
+$client->put([
+    'key' => 'user:john',
+    'replace_field' => 'age',
+    'replace_value' => 31
+]);
+
+// Batch update with field_array
+$client->put([
+    'field_array' => [
+        ['field' => 'type', 'value' => 'premium']
+    ],
+    'replace_field' => 'status',
+    'replace_value' => 'active'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | No* | Object key to update |
+| `field_array` | array | No* | Query to select objects for batch update |
+| `replace_field` | string | Yes | Field name to update |
+| `replace_value` | any | Yes | New value for the field |
+| `encryption_key` | string | No | Key for encrypted objects |
+
+*Either `key` or `field_array` must be provided.
+
+---
+
+### DELETE - Delete Data
+
+Removes one or more objects from the database.
+
+```php
+$client->delete(['key' => 'user:john']);
+
+// Delete multiple with field_array
+$client->delete([
+    'field_array' => [
+        ['field' => 'status', 'value' => 'inactive']
     ]
 ]);
 ```
 
-- **`field_array`** is an array of conditions `['field' => ..., 'value' => ...]`.
-- You can combine it with `'one' => true` to get only the first matching result.
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | No* | Object key to delete |
+| `field_array` | array | No* | Query to select objects for deletion |
+
+*Either `key` or `field_array` must be provided.
+
+---
+
+## 🔢 Array Operations
+
+### PUSH - Add to Array
+
+Adds a value to the end of an array field.
+
+```php
+$client->push([
+    'key' => 'user:john',
+    'array' => 'tags',
+    'value' => 'premium'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | No* | Object key |
+| `field_array` | array | No* | Query for batch operation |
+| `array` | string | Yes | Name of the array field |
+| `value` | any | Yes | Value to append |
+| `encryption_key` | string | No | Key for encrypted objects |
+
+---
+
+### POP - Remove Last Element
+
+Removes and returns the last element from an array field.
+
+```php
+$client->pop([
+    'key' => 'user:john',
+    'array' => 'notifications'
+]);
+```
+
+---
+
+### SPLICE - Remove First Element
+
+Removes the first element from an array field.
+
+```php
+$client->splice([
+    'key' => 'user:john',
+    'array' => 'notifications'
+]);
+```
+
+---
+
+### REMOVE - Remove Specific Value
+
+Removes a specific value from an array field by finding and removing the first matching element.
+
+```php
+$client->remove([
+    'key' => 'user:john',
+    'array' => 'tags',
+    'value' => 'premium'
+]);
+```
+
+---
+
+## 🔐 Encryption Operations
+
+### ENCRYPT - Encrypt Data
+
+Encrypts the data field of an object using AES encryption.
+
+```php
+$client->encrypt([
+    'key' => 'user:john',
+    'encryption_key' => 'secret-key-123'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | Yes | Object key to encrypt |
+| `encryption_key` | string | Yes | Encryption key (used for decryption) |
+
+---
+
+### DECRYPT - Decrypt Data
+
+Decrypts an encrypted object's data using the provided encryption key.
+
+```php
+$client->decrypt([
+    'key' => 'user:john',
+    'encryption_key' => 'secret-key-123'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | Yes | Object key to decrypt |
+| `encryption_key` | string | Yes | Encryption key (must match encryption) |
+
+---
+
+## 🕸️ Graph Operations
+
+### SET_VERTEX - Add Relationship
+
+Adds vertices (connections) to an object for graph relationships.
+
+```php
+// Simple vertex
+$client->setVertex([
+    'key' => 'user:john',
+    'vertex' => 'user:jane'
+]);
+
+// Vertex with relation
+$client->setVertex([
+    'key' => 'user:john',
+    'vertex' => [
+        'vertex' => 'user:jane',
+        'relation' => 'friend',
+        'weight' => 1.0
+    ]
+]);
+
+// Multiple vertices
+$client->setVertex([
+    'key' => 'user:john',
+    'vertex' => ['user:jane', 'user:alice']
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | Yes | Object key to add vertices to |
+| `vertex` | string\|array\|object | Yes | Vertex/vertices to add |
+| `encryption_key` | string | No | Key for encrypted objects |
+
+---
+
+### GET_VERTEX - Get Relationships
+
+Returns all vertices (connections) defined for an object.
+
+```php
+$vertices = $client->getVertex([
+    'key' => 'user:john'
+]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": [
+        {"vertex": "user:jane", "relation": "friend", "weight": 1.0},
+        {"vertex": "post:123", "relation": "author", "weight": 1.0}
+    ]
+}
+```
+
+---
+
+### DELETE_VERTEX - Remove Relationship
+
+Removes a specific vertex/connection from an object.
+
+```php
+$client->deleteVertex([
+    'key' => 'user:john',
+    'vertex' => 'user:jane'
+]);
+```
+
+---
+
+### DFS - Depth-First Search
+
+Performs a distributed depth-first search traversal starting from a given node.
+
+```php
+$results = $client->dfs([
+    'node' => 'user:john',
+    'relation' => 'friend'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `node` | string | Yes | Starting node key |
+| `relation` | string | No | Filter by relation type |
+
+---
+
+### GRAPH_BFS - Breadth-First Search
+
+Returns all nodes reachable from a starting node using breadth-first search.
+
+```php
+$nodes = $client->graph_bfs([
+    'node' => 'user:john'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `node` | string | No | Starting node (default: empty returns all) |
+
+---
+
+### GRAPH_DFS - Graph DFS
+
+Returns all nodes reachable from a starting node using depth-first search.
+
+```php
+$nodes = $client->graph_dfs([
+    'node' => 'user:john'
+]);
+```
+
+---
+
+### GRAPH_SHORTEST_PATH - Shortest Path
+
+Finds the shortest path between a start node and end node using Dijkstra's algorithm.
+
+```php
+$path = $client->graph_shortest_path([
+    'node' => 'user:john',
+    'target' => 'post:123'
+]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": ["user:john", "user:alice", "post:123"]
+}
+```
+
+---
+
+### GRAPH_CONNECTED_COMPONENTS - Connected Components
+
+Identifies all connected components in the graph (groups of nodes where each node is reachable from any other node in the group).
+
+```php
+$components = $client->graph_connected_components([]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": [
+        ["node1", "node2", "node3"],
+        ["node4", "node5"],
+        ["node6"]
+    ]
+}
+```
+
+---
+
+### GRAPH_SCC - Strongly Connected Components
+
+Identifies strongly connected components using Tarjan's algorithm.
+
+```php
+$scc = $client->graph_scc([]);
+```
+
+---
+
+### GRAPH_DEGREE_CENTRALITY - Degree Centrality
+
+Calculates the degree centrality (number of connections) for each node in the graph.
+
+```php
+$centrality = $client->graph_degree_centrality([]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": {
+        "node1": 5,
+        "node2": 3,
+        "node3": 8
+    }
+}
+```
+
+---
+
+### GRAPH_CLOSENESS_CENTRALITY - Closeness Centrality
+
+Calculates closeness centrality for each node, which measures how close a node is to all other nodes in the graph.
+
+```php
+$centrality = $client->graph_closeness_centrality([]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": {
+        "node1": 0.45,
+        "node2": 0.32,
+        "node3": 0.58
+    }
+}
+```
+
+---
+
+### GRAPH_CENTROID - Find Centroid
+
+Finds the node with the highest closeness centrality (the most central node in the graph).
+
+```php
+$centroid = $client->graph_centroid([]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": "node-with-highest-centrality"
+}
+```
+
+---
+
+## 🤖 AI Operations
+
+> **Note:** Some AI operations require a valid license. `ANN` requires a license, while `GET_SIMILAR` is always available.
+
+### ASK - Ask Questions
+
+Uses AI to answer complex questions about the database. The system automatically gathers relevant context using GET, DFS, GET_VERTEX, and ANN operations.
+
+```php
+$response = $client->ask([
+    'question' => 'Which user has the most posts?',
+    'session' => 'global',
+    'backend' => 'ollama'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `question` | string | Yes | The question to ask |
+| `session` | string | No | Mindspace session to use (default: `"global"`) |
+| `backend` | string | No | LLM backend (`"ollama"` or `"openai"`) |
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "SUCCESS",
+    "id": "request-id",
+    "data": {
+        "response": "AI-generated answer...",
+        "context": [...],
+        "session": "session-id"
+    }
+}
+```
+
+---
+
+### ANN / GET_SIMILAR - Similarity Search
+
+Performs approximate nearest neighbor search to find semantically similar objects using vector embeddings.
+
+```php
+// Using existing object's embedding
+$results = $client->ann([
+    'key' => 'user:john',
+    'k' => 10
+]);
+
+// Using GET_SIMILAR (always available, no license required)
+$results = $client->get_similar([
+    'key' => 'user:john',
+    'k' => 10
+]);
+
+// Using a vector directly
+$results = $client->ann([
+    'vector' => [0.1, 0.2, 0.3, 0.4, ...],
+    'k' => 10,
+    'ef' => 25
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `vector` | array | No* | Query vector as array of floats |
+| `key` | string | No* | Use embedding from existing object |
+| `k` | integer | No | Number of neighbors to return (default: 5) |
+| `ef` | integer | No | Search width parameter (default: 25) |
+| `use` | string | No | For key-based: `"data"` or `"embedding"` |
+
+*Either `vector` or `key` must be provided.
+
+---
+
+## 📊 Analytics Operations
+
+### GET_OPERATIONS - Operation History
+
+Returns a log of recent database operations.
+
+```php
+$operations = $client->get_operations([]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": "[{\"operation\":{...},\"response\":{...},\"timestamp\":1234567890},...]"
+}
+```
+
+---
+
+### GET_ACCESS_FREQUENCY - Access Count
+
+Returns the number of times an object has been queried or accessed.
+
+```php
+$count = $client->get_access_frequency([
+    'key' => 'user:john'
+]);
+```
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "data": 42
+}
+```
+
+---
+
+## 🧠 Mindspace Operations
+
+Mindspaces provide AI-powered conversational contexts for semantic operations.
+
+### SET_MINDSPACE - Create Mindspace
+
+Creates a new mindspace (cognitive context) for AI-powered conversations.
+
+```php
+$result = $client->set_mindspace([
+    'mindspace_id' => 'conversation-1'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mindspace_id` | string | No | Custom mindspace ID (auto-generated if omitted) |
+
+---
+
+### DELETE_MINDSPACE - Delete Mindspace
+
+Removes a mindspace and all its associated context.
+
+```php
+$client->delete_mindspace([
+    'mindspace_id' => 'conversation-1'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mindspace_id` | string | Yes | Mindspace ID to delete |
+
+---
+
+### CHAT_MINDSPACE - Chat with Mindspace
+
+Sends a message to a mindspace and receives an AI-generated response. The mindspace maintains conversation context.
+
+```php
+$response = $client->chat_mindspace([
+    'mindspace_id' => 'conversation-1',
+    'message' => 'What do you know about users?'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mindspace_id` | string | Yes | Mindspace ID to chat with |
+| `message` | string | Yes | User message |
+
+**Response:**
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "response": {
+        "response": "AI response text...",
+        "context": [...]
+    }
+}
+```
+
+---
+
+### LECTURE_MINDSPACE - Import Corpus
+
+Imports text corpus into a mindspace for semantic search and context retrieval.
+
+```php
+$client->lecture_mindspace([
+    'mindspace_id' => 'conversation-1',
+    'corpus' => 'User John Doe is a software engineer who specializes in Rust and distributed systems...'
+]);
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mindspace_id` | string | Yes | Mindspace ID to import into |
+| `corpus` | string | Yes | Text content to import |
 
 ---
 
 ## 🔔 Real-time Notifications
 
-Receive automatic updates when an object changes:
+Subscribe to real-time updates when an object changes.
 
 ```php
 $client->notify('user:123', function($data) {
@@ -109,244 +852,113 @@ $client->notify('user:123', function($data) {
 
 ---
 
-## 🕸️ Relations and Graphs
+## 🐘 Schema Class
 
-You can create relationships between objects (vertices):
-
-```php
-$client->setVertex([
-    'key' => 'user:123',
-    'vertex' => 'friend:456',
-    'relation' => 'friend',
-    'encryption_key' => 'secret'
-]);
-```
-
-And traverse the graph with DFS:
-
-```php
-$client->dfs(['node' => 'user:123', 'encryption_key' => 'secret']);
-```
-
-Get all neighbors of an object:
-
-```php
-$client->getVertex([
-    'key' => 'user:123',
-    'encryption_key' => 'secret',
-    'relation' => 'friends'
-]);
-```
-
-Remove a specific neighbor:
-
-```php
-$client->deleteVertex([
-    'key' => 'user:123',
-    'vertex' => 'user:512',
-    'encryption_key' => 'secret'
-]);
-```
-
----
-
-## 🔐 Encryption and Security
-
-Easily encrypt and decrypt data:
-
-```php
-$client->encrypt(['key' => 'user:123', 'encryption_key' => 'secret']);
-$client->decrypt(['key' => 'user:123', 'encryption_key' => 'secret']);
-```
-
----
-
-## 📦 Array Manipulation Methods
-
-Below are the available methods to manipulate arrays in the Satori database using the PHP client:
-
-### 🔹 push
-Adds a value to an existing array in an object.
-```php
-$client->push(['key' => 'user:123', 'array' => 'friends', 'value' => 'user:456']);
-```
-- **key**: Object key.
-- **array**: Name of the array.
-- **value**: Value to add.
-
-### 🔹 pop
-Removes the last element from an array in an object.
-```php
-$client->pop(['key' => 'user:123', 'array' => 'friends']);
-```
-- **key**: Object key.
-- **array**: Name of the array.
-
-### 🔹 splice
-Modifies an array in an object (for example, to cut or replace elements).
-```php
-$client->splice(['key' => 'user:123', 'array' => 'friends']);
-```
-- **key**: Object key.
-- **array**: Name of the array.
-
-### 🔹 remove
-Removes a specific value from an array in an object.
-```php
-$client->remove(['key' => 'user:123', 'array' => 'friends', 'value' => 'user:456']);
-```
-- **key**: Object key.
-- **array**: Name of the array.
-- **value**: Value to remove.
-
-
----
-
-## 🤖 AI Methods
-Satori has AI features integrated that boost developers productivity. 
-
-### 🔹 set_middleware
-Make the LLM analyze incoming querys and decide if it must reject them, accept them or modify them.
-```php
-$client->set_middleware([
-    "operation" => "SET",
-    "middleware" => "Only accept requests that have the amount field specified, and convert its value to dollars"
-]);
-```
-
-
-### 🔹 ann
-Perform an Aproximate Nearest Neighbors search
-```php
-$client->ann(['key' => 'user:123', 'top_k' => '5']);
-```
-- **key**: Source object key.
-- **vector**: Vector of f32 instead of key
-- **top_k**: Number of nearest neighbors to return
-
-### 🔹 query
-Make querys in natural language
-```php
-$client->query(['query' => 'Insert the value 5 into the grades array of user:123', 'backend' => 'openai:gpt-4o-mini']);
-```
-- **query**: Your query in natural language.
-- **ref**: The LLM backend. Must be `openai:model-name` or `ollama:model-name`, if not specified `openai:gpt-4o-mini` will be used as default. If you're using OpenAI as your backend you must specify the `OPENAI_API_KEY` env variable.
-
-### 🔹 ask
-Ask question about your data in natural language
-```php
-$client->query(['question' => 'How many user over 25 years old do we have. Just return the number.', 'backend' => 'openai:gpt-4o-mini']);
-```
-- **question**: Your question in natural language.
-- **ref**: The LLM backend. Must be `openai:model-name` or `ollama:model-name`, if not specified `openai:gpt-4o-mini` will be used as default. If you're using OpenAI as your backend you must specify the `OPENAI_API_KEY` env variable.
-
-## Analytics
-
-### 🔹 get_operations
-
-Returns all operations executed on the database.
-
-### 🔹 get_access_frequency
-
-Returns the number of times an object has been queried or accessed.
-```php
-$client->get_access_frequency(['key' : 'jhon'])
-```
-
-
-# 🐘 Schema Class (Data Model)
-
-You can use the `Schema` class to model your data in an object-oriented way:
+The `Schema` class provides an object-oriented way to model your data.
 
 ```php
 use Satori\Satori;
 use Satori\Schema;
 
-$satori = new Satori("username", "password", "ws://localhost:1234");
+$satori = new Satori('ws://localhost:8000', 'username', 'password');
 $satori->connect();
 
+// Create a schema-based object
 $user = new Schema($satori, "user", ["name" => "Anna"], "my_key");
 $user->set();
+
+// Available methods:
+// CRUD: set(), delete(), encrypt(), decrypt()
+// Graph: setVertex(), getVertex(), deleteVertex(), dfs()
+// References: setRef(), getRefs(), deleteRefs()
+// Arrays: push(), pop(), splice(), remove()
 ```
 
+---
 
-It includes useful methods such as:
+## 📝 Response Format
 
-- `set`, `delete`, `encrypt`, `decrypt`, `set_vertex`, `get_vertex`, `delete_vertex`, `dfs`
+All successful responses follow this general structure:
 
-- Reference methods: `set_ref`, `get_refs`, `delete_refs`
+```json
+{
+    "type": "SUCCESS",
+    "message": "OK",
+    "id": "request-id",
+    "key": "optional-key",
+    "data": { ... }
+}
+```
 
-- Array methods: `push`, `pop`, `splice`, `remove`
+Error responses:
 
+```json
+{
+    "type": "ERROR",
+    "message": "Error description",
+    "id": "request-id"
+}
+```
 
-## 📝 Complete Example
+---
+
+## 💡 Complete Example
 
 ```php
+<?php
+require_once 'vendor/autoload.php';
+require_once 'src/Satori.php';
 use Satori\Satori;
 
-$client = new Satori('username', 'password', 'ws://localhost:8000');
+$client = new Satori('ws://localhost:8000', 'username', 'password');
 $client->connect();
 
+// Create users
 $client->set([
-    'key' => 'user:1',
-    'data' => ['name' => 'Carlos', 'age' => 30],
+    'key' => 'user:john',
+    'data' => ['name' => 'John', 'age' => 30],
     'type' => 'user'
 ]);
 
-$client->notify('user:1', function($data) {
-    echo "Real-time update: ";
-    print_r($data);
+$client->set([
+    'key' => 'user:jane',
+    'data' => ['name' => 'Jane', 'age' => 25],
+    'type' => 'user'
+]);
+
+// Create relationship
+$client->setVertex([
+    'key' => 'user:john',
+    'vertex' => ['vertex' => 'user:jane', 'relation' => 'friend']
+]);
+
+// Get all friends of John
+$friends = $client->getVertex(['key' => 'user:john']);
+
+// Find similar users
+$similar = $client->get_similar(['key' => 'user:john', 'k' => 5]);
+
+// Ask AI about the data
+$answer = $client->ask(['question' => 'How many users do we have?']);
+
+// Subscribe to updates
+$client->notify('user:john', function($data) {
+    echo "John's profile was updated!\n";
 });
+
+echo "Setup complete!\n";
 ```
 
 ---
 
-## 🧠 Key Concepts
+## 📄 License
 
-- **key**: Unique identifier of the object.
-- **type**: Object type (e.g., 'user').
-- **field_array**: Advanced filters for bulk operations.
-- **notifications**: Subscription to real-time changes.
-- **vertices**: Graph-like relationships between objects.
+This SDK is part of the SatoriDB project. For licensing information, please refer to the main project documentation.
 
 ---
 
-## Responses
-All responses obbey the following pattern:
+## 🤝 Contributing
 
-```ts
-{
-  data: any //the requested data if any
-  message: string //status message
-  type: string //SUCCESS || ERROR
-}
-```
+Feel free to open issues or contribute to improve this SDK!
 
-AI responses obbey a different patern:
-## ask
-```ts
-{
-  response: string //response to the question
-}
-```
-
-## query
-```ts
-{
-  result: string //response from the operation made in the db
-  status: string //status
-}
-```
-
-## ann
-```ts
-{
-  results: array //response from the operation made in the db
-}
-```
-## 💬 Questions or Suggestions?
-
-Feel free to open an issue or contribute!
-With ❤️ from the Satori team.
-
----
+Built with ❤️ by the Satori team.

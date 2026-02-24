@@ -74,7 +74,7 @@ class Satori
 
     public function get_access_frequency(array $payload): mixed
     {
-        return $this->send(['command' => 'GET_ACCESS_FREQUENCY'], $payload);
+        return $this->send(['command' => 'GET_ACCESS_FREQUENCY'] + $payload);
     }
 
     public function ask(array $payload): mixed {
@@ -83,6 +83,10 @@ class Satori
     
     public function ann(array $payload): mixed {
         return $this->send(array_merge(['command' => 'ANN'], $payload));
+    }
+
+    public function get_similar(array $payload): mixed {
+        return $this->send(array_merge(['command' => 'GET_SIMILAR'], $payload));
     }
 
     
@@ -162,6 +166,79 @@ class Satori
     public function remove(array $payload): mixed
     {
         return $this->send(['command' => 'REMOVE'] + $payload);
+    }
+
+    // ============================================
+    // Graph Operations
+    // ============================================
+
+    public function graph_bfs(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_BFS'] + $payload);
+    }
+
+    public function graph_dfs(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_DFS'] + $payload);
+    }
+
+    public function graph_shortest_path(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_SHORTEST_PATH'] + $payload);
+    }
+
+    public function graph_connected_components(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_CONNECTED_COMPONENTS'] + $payload);
+    }
+
+    public function graph_scc(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_SCC'] + $payload);
+    }
+
+    public function graph_degree_centrality(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_DEGREE_CENTRALITY'] + $payload);
+    }
+
+    public function graph_closeness_centrality(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_CLOSENESS_CENTRALITY'] + $payload);
+    }
+
+    public function graph_centroid(array $payload): mixed
+    {
+        return $this->send(['command' => 'GRAPH_CENTROID'] + $payload);
+    }
+
+    // ============================================
+    // Mindspace Operations
+    // ============================================
+
+    public function set_mindspace(array $payload): mixed
+    {
+        return $this->send(['command' => 'SET_MINDSPACE'] + $payload);
+    }
+
+    public function create_mindspace(array $payload): mixed
+    {
+        return $this->set_mindspace($payload);
+    }
+
+    public function delete_mindspace(array $payload): mixed
+    {
+        return $this->send(['command' => 'DELETE_MINDSPACE'] + $payload);
+    }
+
+    public function chat_mindspace(array $payload): mixed
+    {
+        return $this->send(['command' => 'CHAT_MINDSPACE'] + $payload);
+    }
+
+    public function lecture_mindspace(array $payload): mixed
+    {
+        return $this->send(['command' => 'LECTURE_MINDSPACE'] + $payload);
     }
 
     public function notify(string $key, callable $callback): void
